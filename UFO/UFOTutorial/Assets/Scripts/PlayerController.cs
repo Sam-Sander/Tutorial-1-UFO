@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public Text countText;
     public Text winText;
+    public Text liveText;
 
     private Rigidbody2D rb2d;
     private int count;
+    private int lives;
 
     void Start()
     {
@@ -18,6 +20,9 @@ public class PlayerController : MonoBehaviour
         count = 0;
         winText.text = "";
         SetCountText();
+        lives = 3;
+        liveText.text = "";
+        SetLiveText();
     }
 
     void FixedUpdate()
@@ -39,15 +44,33 @@ public class PlayerController : MonoBehaviour
                 other.gameObject.SetActive(false);
                 count = count + 1;
                 SetCountText();
-        }
-       
+             }
+            else if (other.gameObject.CompareTag("Enemy"))
+            {
+                other.gameObject.SetActive(false);
+                lives = lives - 1;
+                SetLiveText();
+             }
     }
     void SetCountText ()
     {
         countText.text = "Count: " + count.ToString();
-        if (count >= 12)
+        if (count == 12)
+            {
+                transform.position = new Vector2(87.5f, 0.0f); 
+            }
+        if (count >= 20)
         {
             winText.text = "You win! Game created by Samantha Sander!";
+        }
+    }
+    void SetLiveText()
+    {
+        liveText.text = "Lives: " + lives.ToString();
+        if (lives == 0)
+        {
+            Destroy(this);
+            winText.text = "You lose!";
         }
     }
 }
